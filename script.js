@@ -150,14 +150,13 @@ const jobList = [
     tools: ["React", "Sass"],
   },
 ];
-/* concatenating all the tags to be used found in various properties of an
-object into a single array, 
+/* packing all the tags to be used found in various properties of an
+object into a single array using spread operato,
 because that makes my life easier! */
 jobList.forEach((job) => {
-  job.tags = job.tools.concat(job.languages, job.role, job.level);
-  job.test = [job.tools, job.role, job.level, job.languages]
+  // job.tags = job.tools.concat(job.languages, job.role, job.level);
+  job.tags = [job.role, job.level, ...job.languages, ...job.tools]
 });
-console.log(jobList)
 
 const card_container = document.querySelector(".job_cards");
 const filter_section = document.querySelector(".filter_section");
@@ -209,7 +208,7 @@ card_container.addEventListener("click", (e) => {
     tag.id = `${clickedEl.dataset.filter}`;
     tag.innerHTML = `
     <span class="tag_text">${clickedEl.dataset.filter}</span>
-    <button class="tag_close_icon tag_close_btn">
+    <button class="tag_close_icon">
       <img class="tag_close_icon" src="images/icon-remove.svg" />
     </button>
     `;
@@ -220,17 +219,27 @@ card_container.addEventListener("click", (e) => {
   }
 });
 
+function filterJobs() {
+  // checking if all the array of strings which represent the tags selected are found in an object property, if so the object has all the required taggings so it will show up
+  const newJobList = jobList.filter((job) =>
+    tags.every((tag) => job.tags.includes(tag))
+  );
+  renderJobs(newJobList);
+}
+
 filter_section.addEventListener("click", (e) => {
-  const clickedEl = e.target;
-  if (clickedEl.classList.contains("tag_close_icon")) {
-    const tag = clickedEl.closest("div");
+  const clicked = e.target;
+  if (clicked.classList.contains('tag_close_icon')) {
+    const tag = clicked.closest("div");
     tag.remove();
     tags = tags.filter((tagStr) => tag.id != tagStr);
-    if (filter_tags.innerText == "") {
+    if (tags.length == 0) {
       closeFilterBox();
       renderJobs(jobList);
-    } else filterJobs();
-  } else if (clickedEl.classList.contains("tags_clear_btn")) {
+    }
+    else filterJobs();
+  } 
+  else if (clicked.id == 'tags_clear_btn') {
     filter_tags.innerHTML = "";
     tags = [];
     closeFilterBox();
@@ -241,13 +250,6 @@ filter_section.addEventListener("click", (e) => {
 function closeFilterBox() {
   filter_section.style.opacity = 0;
   filter_section.style.pointerEvents = "none";
-}
-
-function filterJobs() {
-  const newJobList = jobList.filter((job) =>
-    tags.every((tag) => job.tags.includes(tag))
-  );
-  renderJobs(newJobList);
 }
 
 /*
