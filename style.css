@@ -58,7 +58,7 @@ header .header-bg {
   place-items: center;
 }
 
-.clear .tags_clear_btn {
+.clear #tags_clear_btn {
   background: none;
   border: none;
   color: var(--dark-grayish-cyan);

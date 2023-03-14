@@ -1,19 +1,14 @@
-import dataTamul from "./data.json" assert {type: 'json'};
+import jobList from "./data.json" assert { type: "json" };
 const jobs_container = document.querySelector(".job_cards");
 const filter_section = document.querySelector(".filter_section");
 const filter_tags = document.querySelector(".filter_tags");
-let jobList;
 
-fetch("data.json")
-  .then((res) => res.json())
-  .then((data) => {
-    data.forEach((job) => {
-      // job.tags = job.tools.concat(job.languages, job.role, job.level);
-      job.tags = [job.role, job.level, ...job.languages, ...job.tools];
-    });
-    jobList = data;
-    renderJobs(data);
-  });
+jobList.forEach((job) => {
+  // job.tags = job.tools.concat(job.languages, job.role, job.level);
+  job.tags = [job.role, job.level, ...job.languages, ...job.tools];
+});
+
+renderJobs(jobList)
 
 let tags = [];
 
